@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container text-center">
+	<span><a href="/">Home</a></span>
+
+	{% if request.user == u %}
+		<h1>Friends</h1>
+
+		{% for friend in friend_list %}
+			<a href="{{friend.user.profile.get_absolute_url}}">{{ friend.user.username }}</a>
+		{% endfor %}
+
+		<hr>
+		<h2>Send Friend Request</h2>
+		<ul>
+			{% for s_request in sent_friend_requests %}
+				<li>{{s_request.username}}</li>
+			{% endfor %}
+		</ul>
+		<hr>
+		<h2>Receiv Friend Request</h2>
+
+		{% for r_request in rece_friend_requests %}
+			<p><a href="{{r_request.from_user.profile.get_absolute_url}}">{{ r_request.from_user.username}}</a></p>
+			<small><a class="btn btn-primary" href="/friend_request/accept/{{r_request.from_user.id }}">Accept</a></small>
+			<small><a class="btn btn-warning" href="/friend_request/delete/">Delete</a></small>
+		{% endfor %}
+
+	{% else %}
+		{% if button_status == "not_friend" %}
+			<small><a class="btn btn-primary" href="/friend_request/send/{{u.id}}">Add Friend</a></small>
+			<small><a class="btn btn-warning" href="/friend_request/cancel/{{u.id}}">Cancel Request</a></small>
+		{% endif %}
+	{% endif %}
+
+</div>
+
+{% endblock content %}
